@@ -255,25 +255,56 @@ export default function PlayersPage() {
                                             name="birthDate"
                                             type="date"
                                             defaultValue={editingPlayer?.birthDate ? new Date(editingPlayer.birthDate).toISOString().split('T')[0] : ''}
+                                            onChange={(e) => {
+                                                const date = new Date(e.target.value);
+                                                if (!isNaN(date.getTime())) {
+                                                    const year = date.getFullYear();
+                                                    const currentYear = new Date().getFullYear();
+                                                    const age = currentYear - year;
+                                                    let category = 'Master';
+                                                    if (age <= 12) category = 'Junior';
+                                                    else if (age <= 16) category = 'Senior';
+
+                                                    const select = e.target.form?.querySelector('select[name="ageCategory"]') as HTMLSelectElement;
+                                                    if (select) select.value = category;
+                                                }
+                                            }}
                                             className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none border transition-all"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">Κατηγορία</label>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Κατηγορία (Division)</label>
                                         <select
                                             name="ageCategory"
                                             defaultValue={editingPlayer?.ageCategory || 'Master'}
-                                            className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none border transition-all"
+                                            disabled
+                                            className="border-slate-200 block w-full px-4 py-2.5 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed border transition-all appearance-none"
                                         >
                                             <option value="Master">Master</option>
                                             <option value="Senior">Senior</option>
                                             <option value="Junior">Junior</option>
                                         </select>
+                                        {/* Hidden input to pass the value because disabled selects are not sent in formData */}
+                                        <input type="hidden" name="ageCategoryHidden" />
                                     </div>
                                 </div>
                                 <div className="pt-4 flex gap-3">
                                     <button type="button" onClick={() => { setShowModal(false); setEditingPlayer(null); }} className="flex-1 px-6 py-3 border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-all">Άκυρο</button>
-                                    <button type="submit" className="flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all shadow-lg">
+                                    <button
+                                        type="submit"
+                                        onClick={(e) => {
+                                            const form = e.currentTarget.form;
+                                            if (form) {
+                                                const select = form.querySelector('select[name="ageCategory"]') as HTMLSelectElement;
+                                                const hidden = form.querySelector('input[name="ageCategoryHidden"]') as HTMLInputElement;
+                                                if (select && hidden) {
+                                                    hidden.value = select.value;
+                                                    hidden.name = "ageCategory"; // Change name so it matches what server expects
+                                                }
+                                            }
+                                        }}
+                                        className="flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all shadow-lg"
+                                    >
                                         {editingPlayer ? 'Ενημέρωση' : 'Αποθήκευση'}
                                     </button>
                                 </div>
