@@ -11,20 +11,35 @@ export async function createPlayer(formData: FormData) {
     const birthDate = formData.get('birthDate') as string;
     const ageCategory = formData.get('ageCategory') as any;
 
-    await prisma.player.create({
-        data: {
-            firstName,
-            lastName,
-            pokemonId,
-            birthDate: birthDate ? new Date(birthDate) : null,
-            ageCategory: ageCategory || 'Master',
-            totalPoints: 0,
-            totalCredits: 0,
-        },
-    });
+    try {
+        // Έλεγχος αν υπάρχει ήδη το Pokemon ID
+        const existing = await prisma.player.findUnique({
+            where: { pokemonId }
+        });
 
-    revalidatePath('/players');
-    revalidatePath('/');
+        if (existing) {
+            return { error: 'Το Pokemon ID υπάρχει ήδη σε άλλον παίκτη!' };
+        }
+
+        await prisma.player.create({
+            data: {
+                firstName,
+                lastName,
+                pokemonId,
+                birthDate: birthDate ? new Date(birthDate) : null,
+                ageCategory: ageCategory || 'Master',
+                totalPoints: 0,
+                totalCredits: 0,
+            },
+        });
+
+        revalidatePath('/players');
+        revalidatePath('/');
+        return { success: true };
+    } catch (error) {
+        console.error('Create error:', error);
+        return { error: 'Σφάλμα κατά την αποθήκευση του παίκτη.' };
+    }
 }
 
 export async function updateSetting(formData: FormData) {
@@ -45,19 +60,37 @@ export async function updatePlayer(playerId: number, formData: FormData) {
     const birthDate = formData.get('birthDate') as string;
     const ageCategory = formData.get('ageCategory') as any;
 
-    await prisma.player.update({
-        where: { id: playerId },
-        data: {
-            firstName,
-            lastName,
-            pokemonId,
-            birthDate: birthDate ? new Date(birthDate) : null,
-            ageCategory: ageCategory || 'Master',
-        },
-    });
+    try {
+        // Έλεγχος αν το νέο Pokemon ID χρησιμοποιείται από άλλον παίκτη
+        const existing = await prisma.player.findFirst({
+            where: {
+                pokemonId,
+                id: { not: playerId }
+            }
+        });
 
-    revalidatePath('/players');
-    revalidatePath('/');
+        if (existing) {
+            return { error: 'Το Pokemon ID χρησιμοποιείται ήδη από άλλον παίκτη!' };
+        }
+
+        await prisma.player.update({
+            where: { id: playerId },
+            data: {
+                firstName,
+                lastName,
+                pokemonId,
+                birthDate: birthDate ? new Date(birthDate) : null,
+                ageCategory: ageCategory || 'Master',
+            },
+        });
+
+        revalidatePath('/players');
+        revalidatePath('/');
+        return { success: true };
+    } catch (error) {
+        console.error('Update error:', error);
+        return { error: 'Σφάλμα κατά την ενημέρωση του παίκτη.' };
+    }
 }
 
 export async function deletePlayer(playerId: number) {

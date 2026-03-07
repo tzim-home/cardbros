@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { prisma } from '@/lib/prisma';
 import { UserPlus, Search, Edit2, Trash2, ChevronRight, Award, History, X, DollarSign } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 // Αυτή η σελίδα χρειάζεται client-side φιλτράρισμα ή server actions
 import { createPlayer, updatePlayer, deletePlayer, manualPointsAdjustment, manualCreditsAdjustment, getPlayerHistory } from '@/lib/actions';
@@ -37,11 +38,19 @@ export default function PlayersPage() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        let result;
         if (editingPlayer) {
-            await updatePlayer(editingPlayer.id, formData);
+            result = await updatePlayer(editingPlayer.id, formData);
         } else {
-            await createPlayer(formData);
+            result = await createPlayer(formData);
         }
+
+        if (result?.error) {
+            toast.error(result.error);
+            return;
+        }
+
+        toast.success(editingPlayer ? 'Ο παίκτης ενημερώθηκε!' : 'Ο παίκτης προστέθηκε!');
         setShowModal(false);
         setEditingPlayer(null);
         fetchPlayers();
