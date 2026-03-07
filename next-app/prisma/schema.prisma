@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  @@map("admin_users")
+}
+
+model Player {
+  id           Int           @id @default(autoincrement())
+  birthDate    DateTime?
+  ageCategory  AgeCategory   @default(Master)
+  totalPoints  Int           @default(0)
+  createdAt    DateTime      @default(now())
+  firstName    String
+  lastName     String
+  pokemonId    String        @unique
+  totalCredits Decimal       @default(0.00) @db.Decimal(10, 2)
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+
+  @@map("players")
+}
+
+model Transaction {
+  id        Int             @id @default(autoincrement())
+  playerId  Int
+  type      TransactionType
+  amount    Decimal         @db.Decimal(10, 2)
+  reason    String?
+  createdAt DateTime        @default(now())
+  eventId   Int?
+  event     Event?          @relation(fields: [eventId], references: [id])
+  player    Player          @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model Event {
+  id           Int           @id @default(autoincrement())
+  name         String
+  date         DateTime      @default(now())
+  isActive     Boolean       @default(true)
+  description  String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+
+  @@map("events")
+}
+
+model Setting {
+  key         String   @id @map("setting_key")
+  value       String   @map("setting_value")
+  description String?
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  @@map("settings")
+}
+
+enum AgeCategory {
+  Junior
+  Senior
+  Master
+}
+
+enum TransactionType {
+  checkin
+  points_add
+  points_sub
+  credits_add
+  credits_sub
+}
