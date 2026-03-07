@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { prisma } from '@/lib/prisma';
-import { UserPlus, Search, Edit2, Trash2, ChevronRight, Award, History, X, DollarSign } from 'lucide-react';
+import { UserPlus, Search, Edit2, Trash2, ChevronRight, Award, History, X, DollarSign, Download, Upload } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // Αυτή η σελίδα χρειάζεται client-side φιλτράρισμα ή server actions
@@ -117,26 +117,112 @@ export default function PlayersPage() {
                         <h1 className="text-3xl font-bold text-slate-900">Διαχείριση Παικτών</h1>
                         <p className="text-slate-600">Προσθήκη, επεξεργασία και αναζήτηση παικτών.</p>
                     </div>
-                    <button
-                        onClick={() => { setEditingPlayer(null); setShowModal(true); }}
-                        className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-md"
-                    >
-                        <UserPlus className="w-5 h-5" />
-                        Νέος Παίκτης
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <label className="cursor-pointer bg-amber-50 hover:bg-amber-100 text-amber-700 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all border border-amber-200 shadow-sm">
+                            <Upload className="w-5 h-5" />
+                            Εισαγωγή CSV
+                            <input
+                                type="file"
+                                accept=".csv"
+                                className="hidden"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+
+                                    const reader = new FileReader();
+                                    reader.onload = async (event) => {
+                                        const text = event.target?.result as string;
+                                        const lines = text.split('\n');
+                                        const headers = lines[0].split(',');
+
+                                        let successCount = 0;
+                                        let errorCount = 0;
+
+                                        toast.loading('Εισαγωγή παικτών...');
+
+                                        for (let i = 1; i < lines.length; i++) {
+                                            if (!lines[i].trim()) continue;
+                                            const values = lines[i].split(',');
+                                            const formData = new FormData();
+                                            // Αναμένουμε format: Όνομα, Επώνυμο, Pokemon ID, Division (προαιρετικό), Ημερομηνία Γέννησης (προαιρετικό)
+                                            formData.append('firstName', values[0]?.trim());
+                                            formData.append('lastName', values[1]?.trim());
+                                            formData.append('pokemonId', values[2]?.trim().replace(/"/g, ''));
+
+                                            // Αν υπάρχει ημερομηνία στο format (values[4]), την προσθέτουμε
+                                            if (values[4]) formData.append('birthDate', values[4]?.trim());
+
+                                            const res = await createPlayer(formData);
+                                            if (res?.success) successCount++;
+                                            else errorCount++;
+                                        }
+
+                                        toast.dismiss();
+                                        if (successCount > 0) toast.success(`Επιτυχής εισαγωγή ${successCount} παικτών!`);
+                                        if (errorCount > 0) toast.error(`Αποτυχία σε ${errorCount} παίκτες (ίσως διπλότυπα IDs).`);
+                                        fetchPlayers();
+                                    };
+                                    reader.readAsText(file);
+                                }}
+                            />
+                        </label>
+                        <button
+                            onClick={() => { setEditingPlayer(null); setShowModal(true); }}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-200"
+                        >
+                            <UserPlus className="w-5 h-5" />
+                            Προσθήκη Παίκτη
+                        </button>
+                    </div>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="p-6 border-b border-slate-100 bg-slate-50/50">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                            <input
-                                type="text"
-                                placeholder="Αναζήτηση με όνομα ή Pokemon ID..."
-                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
+                        <div className="flex items-center gap-4">
+                            <div className="relative flex-grow">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                <input
+                                    type="text"
+                                    placeholder="Αναζήτηση παίκτη (Όνομα ή ID)..."
+                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-white"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                            </div>
+                            <button
+                                onClick={() => {
+                                    const headers = ['Όνομα', 'Επώνυμο', 'Pokemon ID', 'Division', 'Πόντοι', 'Credits'];
+                                    const rows = players.map(p => [
+                                        p.firstName,
+                                        p.lastName,
+                                        `"${p.pokemonId}"`,
+                                        p.ageCategory,
+                                        p.totalPoints,
+                                        p.totalCredits
+                                    ]);
+
+                                    const csvContent = "\uFEFF" + [headers, ...rows].map(e => e.join(",")).join("\n");
+                                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                                    const url = URL.createObjectURL(blob);
+                                    const link = document.createElement("a");
+                                    link.setAttribute("href", url);
+                                    link.setAttribute("download", `players_export_${new Date().toISOString().split('T')[0]}.csv`);
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                }}
+                                className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all"
+                            >
+                                <Download className="w-5 h-5" />
+                                Εξαγωγή CSV
+                            </button>
+                            <button
+                                onClick={() => { setEditingPlayer(null); setShowModal(true); }}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-200"
+                            >
+                                <UserPlus className="w-5 h-5" />
+                                Προσθήκη Παίκτη
+                            </button>
                         </div>
                     </div>
 

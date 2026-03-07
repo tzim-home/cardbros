@@ -245,3 +245,40 @@ export async function registerPlayerToEvent(playerId: number, eventId: number) {
     revalidatePath('/players');
     revalidatePath('/');
 }
+
+export async function unregisterPlayerFromEvent(playerId: number, eventId: number) {
+    // Βρίσκουμε τη συναλλαγή checkin
+    const checkinTransaction = await prisma.transaction.findFirst({
+        where: {
+            playerId,
+            eventId,
+            type: 'checkin'
+        }
+    });
+
+    if (!checkinTransaction) {
+        throw new Error('Δεν βρέθηκε εγγραφή για αυτόν τον παίκτη.');
+    }
+
+    const pointsToRemove = Number(checkinTransaction.amount);
+
+    await prisma.$transaction([
+        // Αφαίρεση πόντων από τον παίκτη
+        prisma.player.update({
+            where: { id: playerId },
+            data: {
+                totalPoints: { decrement: pointsToRemove },
+            },
+        }),
+        // Διαγραφή της συναλλαγής
+        prisma.transaction.delete({
+            where: { id: checkinTransaction.id },
+        }),
+    ]);
+
+    revalidatePath(`/events/${eventId}`);
+    revalidatePath('/events');
+    revalidatePath('/players');
+    revalidatePath('/');
+}
+

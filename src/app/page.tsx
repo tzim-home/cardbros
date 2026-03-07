@@ -52,18 +52,33 @@ export default async function Dashboard() {
     { label: 'Ρυθμίσεις Συστήματος', icon: SettingsIcon, color: 'slate', href: '/settings' },
   ];
 
+  const activeEvent = await prisma.event.findFirst({
+    where: { isActive: true },
+    orderBy: { date: 'desc' },
+  });
+
   return (
     <div className="min-h-screen bg-slate-50">
-
-
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <header className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <LayoutDashboard className="w-8 h-8 text-slate-700" />
-            <h1 className="text-3xl font-bold text-slate-900">Ταμπλό Ελέγχου</h1>
+        <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <LayoutDashboard className="w-8 h-8 text-slate-700" />
+              <h1 className="text-3xl font-bold text-slate-900">Ταμπλό Ελέγχου</h1>
+            </div>
+            <p className="text-slate-600">Καλώς ορίσατε στο σύστημα διαχείρισης Pokemon TCG.</p>
           </div>
-          <p className="text-slate-600">Καλώς ορίσατε στο σύστημα διαχείρισης Pokemon TCG.</p>
+
+          {activeEvent && (
+            <Link
+              href={`/events/${activeEvent.id}`}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-lg shadow-blue-200 transition-all hover:scale-105 active:scale-95"
+            >
+              <Trophy className="w-6 h-6" />
+              <span>Fast Check-in: {activeEvent.name}</span>
+            </Link>
+          )}
         </header>
 
         {/* Stats Grid */}
@@ -119,7 +134,7 @@ export default async function Dashboard() {
                   </div>
                 ) : (
                   <div className="divide-y divide-slate-100">
-                    {latestTransactions.map((tx) => (
+                    {latestTransactions.map((tx: any) => (
                       <div key={tx.id} className="p-4 hover:bg-slate-50 transition-colors">
                         <div className="flex justify-between items-start mb-1">
                           <span className="font-semibold text-slate-900 text-sm">

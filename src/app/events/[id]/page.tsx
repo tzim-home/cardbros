@@ -5,6 +5,8 @@ import { Calendar, Users, Trophy, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import EventRegistrationClient from './EventRegistrationClient';
 import EventDeleteClient from './EventDeleteClient';
+import EventUnregisterClient from './EventUnregisterClient';
+import EventExportClient from './EventExportClient';
 
 export default async function EventPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -62,9 +64,12 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                     <EventRegistrationClient eventId={eventId} isActive={event.isActive} />
 
                     <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
-                        <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                            <Users className="w-5 h-5 text-blue-600" />
-                            Συμμετέχοντες
+                        <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center justify-between gap-2 w-full">
+                            <div className="flex items-center gap-2">
+                                <Users className="w-5 h-5 text-blue-600" />
+                                Συμμετέχοντες
+                            </div>
+                            <EventExportClient eventName={event.name} players={registeredPlayers} />
                         </h2>
                         {registeredPlayers.length === 0 ? (
                             <div className="text-center py-12 text-slate-400 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
@@ -81,8 +86,15 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                                                 <div className="text-sm font-mono text-slate-500">{player.pokemonId}</div>
                                             </div>
                                         </div>
-                                        <div className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-bold border border-emerald-100">
-                                            Εγγράφηκε
+                                        <div className="flex items-center gap-2">
+                                            <div className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-bold border border-emerald-100">
+                                                Εγγράφηκε
+                                            </div>
+                                            <EventUnregisterClient
+                                                playerId={player.id}
+                                                eventId={eventId}
+                                                playerName={`${player.firstName} ${player.lastName}`}
+                                            />
                                         </div>
                                     </li>
                                 ))}

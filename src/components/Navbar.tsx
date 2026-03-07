@@ -30,17 +30,25 @@ export default function Navbar() {
                     </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center space-x-1">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname === link.href ? 'bg-blue-700 text-white' : 'hover:bg-blue-500 text-blue-50'}
-                                `}
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
+                    <div className="hidden md:flex items-center gap-1">
+                        <Link href="/" className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${pathname === '/' ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
+                            Ταμπλό
+                        </Link>
+                        <Link href="/leaderboard" className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${pathname === '/leaderboard' ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
+                            Κατάταξη
+                        </Link>
+                        <Link href="/events" className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${pathname.startsWith('/events') ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
+                            Τουρνουά
+                        </Link>
+                        <Link href="/players" className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${pathname === '/players' ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
+                            Παίκτες
+                        </Link>
+                        <Link href="/transactions" className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${pathname === '/transactions' ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
+                            Ιστορικό
+                        </Link>
+                        <Link href="/settings" className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${pathname === '/settings' ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
+                            Ρυθμίσεις
+                        </Link>
                     </div>
 
                     {/* Admin / Logout (Desktop) */}
