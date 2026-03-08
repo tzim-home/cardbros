@@ -107,10 +107,10 @@ export default async function LeaderboardPage({
                         <table className="w-full">
                             <thead>
                                 <tr className="bg-slate-50 text-slate-400 text-xs font-bold uppercase border-b border-slate-100">
-                                    <th className="px-8 py-4 text-left w-20">Θέση</th>
-                                    <th className="px-8 py-4 text-left">Παίκτης</th>
-                                    <th className="px-8 py-4 text-left">Κατηγορία</th>
-                                    <th className="px-8 py-4 text-right">Συνολικοί Πόντοι</th>
+                                    <th className="px-4 py-3 sm:px-8 sm:py-4 text-left w-12 sm:w-20">Θέση</th>
+                                    <th className="px-4 py-3 sm:px-8 sm:py-4 text-left">Παίκτης</th>
+                                    <th className="px-4 py-3 sm:px-8 sm:py-4 text-left hidden sm:table-cell">Κατηγορία</th>
+                                    <th className="px-4 py-3 sm:px-8 sm:py-4 text-right">Πόντοι</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
@@ -123,21 +123,30 @@ export default async function LeaderboardPage({
                                 ) : (
                                     processedPlayers.map((player, index: number) => (
                                         <tr key={player.id} className="hover:bg-slate-50 transition-colors group">
-                                            <td className="px-8 py-6">
-                                                <div className="flex items-center justify-center w-10 h-10 rounded-xl font-bold text-lg">
-                                                    {index === 0 ? <Medal className="w-8 h-8 text-amber-500" /> :
-                                                        index === 1 ? <Medal className="w-8 h-8 text-slate-400" /> :
-                                                            index === 2 ? <Medal className="w-8 h-8 text-amber-700" /> :
+                                            <td className="px-4 py-4 sm:px-8 sm:py-6">
+                                                <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-bold text-base sm:text-lg">
+                                                    {index === 0 ? <Medal className="w-6 h-6 sm:w-8 sm:h-8 text-amber-500" /> :
+                                                        index === 1 ? <Medal className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400" /> :
+                                                            index === 2 ? <Medal className="w-6 h-6 sm:w-8 sm:h-8 text-amber-700" /> :
                                                                 <span className="text-slate-400">#{index + 1}</span>}
                                                 </div>
                                             </td>
-                                            <td className="px-8 py-6">
-                                                <div className="font-bold text-slate-900 text-lg group-hover:text-slate-600 transition-colors">
+                                            <td className="px-4 py-4 sm:px-8 sm:py-6">
+                                                <div className="font-bold text-slate-900 text-base sm:text-lg group-hover:text-slate-600 transition-colors">
                                                     {player.firstName} {player.lastName}
                                                 </div>
-                                                <div className="text-sm text-slate-400 font-mono">ID: {player.pokemonId}</div>
+                                                <div className="text-xs sm:text-sm text-slate-400 font-mono">ID: {player.pokemonId}</div>
+                                                {/* Εμφανίζουμε την κατηγορία στο mobile view απευθείας στο όνομα */}
+                                                <div className="sm:hidden mt-1">
+                                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${player.ageCategory === 'Master' ? 'bg-slate-100 text-slate-700' :
+                                                        player.ageCategory === 'Senior' ? 'bg-slate-200 text-slate-800' :
+                                                            'bg-slate-50 text-slate-500'
+                                                        }`}>
+                                                        {player.ageCategory}
+                                                    </span>
+                                                </div>
                                             </td>
-                                            <td className="px-8 py-6">
+                                            <td className="px-4 py-4 sm:px-8 sm:py-6 hidden sm:table-cell">
                                                 <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${player.ageCategory === 'Master' ? 'bg-slate-100 text-slate-700' :
                                                     player.ageCategory === 'Senior' ? 'bg-slate-200 text-slate-800' :
                                                         'bg-slate-50 text-slate-500'
@@ -145,10 +154,10 @@ export default async function LeaderboardPage({
                                                     {player.ageCategory}
                                                 </span>
                                             </td>
-                                            <td className="px-8 py-6 text-right">
-                                                <div className="text-2xl font-black text-slate-900">
+                                            <td className="px-4 py-4 sm:px-8 sm:py-6 text-right">
+                                                <div className="text-xl sm:text-2xl font-black text-slate-900">
                                                     {player.displayPoints}
-                                                    <span className="text-xs font-bold text-slate-400 ml-1 uppercase">pts</span>
+                                                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 ml-1 uppercase block sm:inline">pts</span>
                                                 </div>
                                             </td>
                                         </tr>

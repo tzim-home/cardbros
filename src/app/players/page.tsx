@@ -114,10 +114,10 @@ export default function PlayersPage() {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900">Διαχείριση Παικτών</h1>
-                        <p className="text-slate-600">Προσθήκη, επεξεργασία και αναζήτηση παικτών.</p>
+                        <p className="text-slate-600 mt-1">Προσθήκη, επεξεργασία και αναζήτηση παικτών.</p>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <label className="cursor-pointer bg-amber-50 hover:bg-amber-100 text-amber-700 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all border border-amber-200 shadow-sm">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+                        <label className="cursor-pointer bg-amber-50 hover:bg-amber-100 text-amber-700 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all border border-amber-200 shadow-sm w-full sm:w-auto">
                             <Upload className="w-5 h-5" />
                             Εισαγωγή CSV
                             <input
@@ -167,7 +167,7 @@ export default function PlayersPage() {
                         </label>
                         <button
                             onClick={() => { setEditingPlayer(null); setShowModal(true); }}
-                            className="bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-slate-200"
+                            className="bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-slate-200 w-full sm:w-auto"
                         >
                             <UserPlus className="w-5 h-5 text-slate-400" />
                             Προσθήκη Παίκτη
@@ -176,8 +176,8 @@ export default function PlayersPage() {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div className="p-6 border-b border-slate-100 bg-slate-50/50">
-                        <div className="flex items-center gap-4">
+                    <div className="p-4 sm:p-6 border-b border-slate-100 bg-slate-50/50">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                             <div className="relative flex-grow">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                 <input
@@ -210,30 +210,31 @@ export default function PlayersPage() {
                                     link.click();
                                     document.body.removeChild(link);
                                 }}
-                                className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all"
+                                className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all w-full sm:w-auto shrink-0"
                             >
-                                <Download className="w-5 h-5" />
-                                Εξαγωγή CSV
+                                <Download className="w-5 h-5 shrink-0" />
+                                <span className="hidden sm:inline">Εξαγωγή CSV</span>
+                                <span className="sm:hidden">Εξαγωγή</span>
                             </button>
                             <button
                                 onClick={() => { setEditingPlayer(null); setShowModal(true); }}
-                                className="bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-slate-200"
+                                className="hidden md:flex bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-xl font-bold items-center gap-2 transition-all shadow-lg shadow-slate-200 shrink-0"
                             >
-                                <UserPlus className="w-5 h-5 text-slate-400" />
-                                Προσθήκη Παίκτη
+                                <UserPlus className="w-5 h-5 text-slate-400 shrink-0" />
+                                Προσθήκη
                             </button>
                         </div>
                     </div>
 
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left">
+                        <table className="w-full text-left min-w-[700px]">
                             <thead>
                                 <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider font-semibold">
-                                    <th className="px-6 py-4">Παίκτης</th>
-                                    <th className="px-6 py-4">Pokemon ID</th>
-                                    <th className="px-6 py-4">Κατηγορία</th>
-                                    <th className="px-6 py-4 text-right">Πόντοι / Credits</th>
-                                    <th className="px-6 py-4 text-center">Ενέργειες</th>
+                                    <th className="px-4 py-3 sm:px-6 sm:py-4">Παίκτης</th>
+                                    <th className="px-4 py-3 sm:px-6 sm:py-4">Pokemon ID</th>
+                                    <th className="px-4 py-3 sm:px-6 sm:py-4">Κατηγορία</th>
+                                    <th className="px-4 py-3 sm:px-6 sm:py-4 text-right">Πόντοι / Credits</th>
+                                    <th className="px-4 py-3 sm:px-6 sm:py-4 text-center">Ενέργειες</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
@@ -247,20 +248,20 @@ export default function PlayersPage() {
                                     </tr>
                                 ) : filteredPlayers.map(player => (
                                     <tr key={player.id} className="hover:bg-slate-50/80 transition-colors group">
-                                        <td className="px-6 py-4">
+                                        <td className="px-4 py-3 sm:px-6 sm:py-4">
                                             <div className="font-semibold text-slate-900">{player.firstName} {player.lastName}</div>
                                             <div className="text-xs text-slate-400">{player.birthDate ? new Date(player.birthDate).toLocaleDateString() : '-'}</div>
                                         </td>
-                                        <td className="px-6 py-4 text-slate-600 font-mono text-sm">{player.pokemonId}</td>
-                                        <td className="px-6 py-4">
-                                            <span className="px-2 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold uppercase">{player.ageCategory}</span>
+                                        <td className="px-4 py-3 sm:px-6 sm:py-4 text-slate-600 font-mono text-sm">{player.pokemonId}</td>
+                                        <td className="px-4 py-3 sm:px-6 sm:py-4">
+                                            <span className="px-2 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] sm:text-xs font-bold uppercase">{player.ageCategory}</span>
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="font-bold text-slate-900">{player.totalPoints} pts</div>
-                                            <div className="text-sm text-slate-500">{(player.totalCredits || 0).toFixed(2)} Credits</div>
+                                        <td className="px-4 py-3 sm:px-6 sm:py-4 text-right">
+                                            <div className="font-bold text-slate-900">{player.totalPoints} <span className="text-[10px] sm:text-xs text-slate-400">pts</span></div>
+                                            <div className="text-xs sm:text-sm text-slate-500">{(player.totalCredits || 0).toFixed(2)} <span className="text-[10px] sm:hidden">C</span><span className="hidden sm:inline">Credits</span></div>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex justify-center gap-1">
+                                        <td className="px-4 py-3 sm:px-6 sm:py-4">
+                                            <div className="flex justify-center gap-1 sm:gap-2">
                                                 <button
                                                     onClick={() => handleViewHistory(player)}
                                                     title="Ιστορικό" className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all"
@@ -303,16 +304,16 @@ export default function PlayersPage() {
 
                 {/* Modal για Νέο/Επεξεργασία Παίκτη */}
                 {showModal && (
-                    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden">
-                            <div className="px-8 py-6 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
-                                <h3 className="text-xl font-bold text-slate-900">
+                    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+                        <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden max-h-[90vh] overflow-y-auto">
+                            <div className="px-6 py-4 sm:px-8 sm:py-6 bg-slate-50 border-b border-slate-100 flex items-center justify-between sticky top-0 z-10">
+                                <h3 className="text-lg sm:text-xl font-bold text-slate-900">
                                     {editingPlayer ? 'Επεξεργασία Παίκτη' : 'Προσθήκη Νέου Παίκτη'}
                                 </h3>
-                                <button onClick={() => { setShowModal(false); setEditingPlayer(null); }} className="text-slate-400 hover:text-slate-600">✕</button>
+                                <button onClick={() => { setShowModal(false); setEditingPlayer(null); }} className="text-slate-400 hover:text-slate-600 p-2">✕</button>
                             </div>
-                            <form onSubmit={handleSubmit} className="p-8 space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
+                            <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1">Όνομα</label>
                                         <input
@@ -342,7 +343,7 @@ export default function PlayersPage() {
                                         placeholder="π.χ. 1234567"
                                     />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1">Ημερομηνία Γέννησης</label>
                                         <input

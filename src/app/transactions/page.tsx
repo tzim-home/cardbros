@@ -22,49 +22,52 @@ export default async function TransactionsPage() {
                 </header>
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <table className="w-full text-left">
-                        <thead>
-                            <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider font-semibold">
-                                <th className="px-6 py-4">Ημερομηνία</th>
-                                <th className="px-6 py-4">Παίκτης</th>
-                                <th className="px-6 py-4">Κίνηση / Αιτιολογία</th>
-                                <th className="px-6 py-4 text-right">Ποσό</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {transactions.length === 0 ? (
-                                <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-slate-400 italic">Δεν υπάρχουν συναλλαγές.</td>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left min-w-[600px]">
+                            <thead>
+                                <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider font-semibold">
+                                    <th className="px-4 md:px-6 py-3 md:py-4">Ημερομηνία</th>
+                                    <th className="px-4 md:px-6 py-3 md:py-4">Παίκτης</th>
+                                    <th className="px-4 md:px-6 py-3 md:py-4">Κίνηση / Αιτιολογία</th>
+                                    <th className="px-4 md:px-6 py-3 md:py-4 text-right">Ποσό</th>
                                 </tr>
-                            ) : transactions.map((tx: any) => (
-                                <tr key={tx.id} className="hover:bg-slate-50 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center gap-2 text-slate-600 text-sm">
-                                            <Calendar className="w-4 h-4" />
-                                            {new Date(tx.createdAt).toLocaleString('el-GR')}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 font-semibold text-slate-900">
-                                        {(tx.player as any).firstName} {(tx.player as any).lastName}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="font-semibold text-slate-800 text-sm">
-                                            {/* @ts-ignore */}
-                                            {tx.reason || (tx.type === 'checkin' ? (tx.event ? `Check-in: ${tx.event.name}` : 'Check-in') : 'Συναλλαγή')}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className={`flex items-center justify-end font-bold ${tx.type.includes('add') || tx.type === 'checkin' ? 'text-emerald-600' : 'text-red-600'
-                                            }`}>
-                                            {tx.type.includes('add') || tx.type === 'checkin' ? <ArrowUpRight className="w-4 h-4 mr-1" /> : <ArrowDownRight className="w-4 h-4 mr-1" />}
-                                            {tx.type.includes('credits') ? `${tx.type === 'credits_sub' ? '-' : '+'}${tx.amount} Credits` :
-                                                `${tx.type === 'points_sub' ? '-' : '+'}${tx.amount} πόντους`}
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {transactions.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={5} className="px-6 py-12 text-center text-slate-400 italic">Δεν υπάρχουν συναλλαγές.</td>
+                                    </tr>
+                                ) : transactions.map((tx: any) => (
+                                    <tr key={tx.id} className="hover:bg-slate-50 transition-colors">
+                                        <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                                            <div className="flex items-center gap-2 text-slate-600 text-sm">
+                                                <Calendar className="w-4 h-4 shrink-0" />
+                                                <span className="hidden sm:inline">{new Date(tx.createdAt).toLocaleString('el-GR')}</span>
+                                                <span className="sm:hidden">{new Date(tx.createdAt).toLocaleDateString('el-GR')}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-4 md:px-6 py-3 md:py-4 font-semibold text-slate-900 whitespace-nowrap">
+                                            {(tx.player as any).firstName} {(tx.player as any).lastName}
+                                        </td>
+                                        <td className="px-4 md:px-6 py-3 md:py-4">
+                                            <div className="font-semibold text-slate-800 text-sm line-clamp-2 md:line-clamp-none">
+                                                {/* @ts-ignore */}
+                                                {tx.reason || (tx.type === 'checkin' ? (tx.event ? `Check-in: ${tx.event.name}` : 'Check-in') : 'Συναλλαγή')}
+                                            </div>
+                                        </td>
+                                        <td className="px-4 md:px-6 py-3 md:py-4 text-right whitespace-nowrap">
+                                            <div className={`flex items-center justify-end font-bold ${tx.type.includes('add') || tx.type === 'checkin' ? 'text-emerald-600' : 'text-red-600'
+                                                }`}>
+                                                {tx.type.includes('add') || tx.type === 'checkin' ? <ArrowUpRight className="w-4 h-4 mr-1 shrink-0" /> : <ArrowDownRight className="w-4 h-4 mr-1 shrink-0" />}
+                                                {tx.type.includes('credits') ? `${tx.type === 'credits_sub' ? '-' : '+'}${tx.amount} C` :
+                                                    `${tx.type === 'points_sub' ? '-' : '+'}${tx.amount} pts`}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </main>
         </div>

@@ -74,7 +74,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                     <EventRegistrationClient eventId={eventId} isActive={event.isActive} />
 
                     <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
-                        <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center justify-between gap-2 w-full">
+                        <h2 className="text-xl font-bold text-slate-900 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
                             <div className="flex items-center gap-2">
                                 <Users className="w-5 h-5 text-slate-400" />
                                 Συμμετέχοντες
@@ -91,9 +91,9 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                                     <li key={idx} className="py-4 flex items-center justify-between hover:bg-slate-50 px-4 -mx-4 rounded-xl transition-colors">
                                         <div className="flex items-center gap-4">
                                             <span className="text-xl font-bold text-slate-300 min-w-[1.5rem] text-right">{idx + 1}.</span>
-                                            <div>
-                                                <div className="font-bold text-slate-900">{player.firstName} {player.lastName}</div>
-                                                <div className="text-sm font-mono text-slate-500">{player.pokemonId}</div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="font-bold text-slate-900 truncate">{player.firstName} {player.lastName}</div>
+                                                <div className="text-sm font-mono text-slate-500 truncate">{player.pokemonId}</div>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
