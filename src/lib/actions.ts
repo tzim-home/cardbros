@@ -319,4 +319,44 @@ export async function clearGiveawayHistory() {
     }
 }
 
+export async function fixDatabaseStructure() {
+    try {
+        // SQL για τη δημιουργία του πίνακα giveaway_winners αν δεν υπάρχει
+        await prisma.$executeRawUnsafe(`
+            CREATE TABLE IF NOT EXISTS "giveaway_winners" (
+                "id" SERIAL NOT NULL,
+                "eventId" INTEGER NOT NULL,
+                "playerId" INTEGER NOT NULL,
+                "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT "giveaway_winners_pkey" PRIMARY KEY ("id")
+            );
+        `);
+
+        // SQL για τα foreign keys (με προσοχή αν υπάρχουν ήδη)
+        try {
+            await prisma.$executeRawUnsafe(`
+                ALTER TABLE "giveaway_winners" 
+                ADD CONSTRAINT "giveaway_winners_eventId_fkey" 
+                FOREIGN KEY ("eventId") REFERENCES "events"("id") 
+                ON DELETE CASCADE ON UPDATE CASCADE;
+            `);
+        } catch (e) { /* Ήδη υπάρχει ή σφάλμα */ }
+
+        try {
+            await prisma.$executeRawUnsafe(`
+                ALTER TABLE "giveaway_winners" 
+                ADD CONSTRAINT "giveaway_winners_playerId_fkey" 
+                FOREIGN KEY ("playerId") REFERENCES "players"("id") 
+                ON DELETE CASCADE ON UPDATE CASCADE;
+            `);
+        } catch (e) { /* Ήδη υπάρχει ή σφάλμα */ }
+
+        revalidatePath('/giveaway');
+        return { success: true, message: 'Η βάση δεδομένων ενημερώθηκε επιτυχώς!' };
+    } catch (error: any) {
+        console.error('Migration error:', error);
+        return { error: 'Σφάλμα κατά την ενημέρωση της βάσης: ' + error.message };
+    }
+}
+
 
