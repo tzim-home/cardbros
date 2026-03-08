@@ -28,6 +28,7 @@ model Player {
   totalCredits Decimal       @default(0.00) @db.Decimal(10, 2)
   updatedAt    DateTime      @updatedAt
   transactions Transaction[]
+  giveawayWins GiveawayWinner[]
 
   @@map("players")
 }
@@ -40,7 +41,7 @@ model Transaction {
   reason    String?
   createdAt DateTime        @default(now())
   eventId   Int?
-  event     Event?          @relation(fields: [eventId], references: [id])
+  event     Event?          @relation(fields: [eventId], references: [id], onDelete: Cascade)
   player    Player          @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
   @@map("transactions")
@@ -55,8 +56,21 @@ model Event {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   transactions Transaction[]
+  giveawayWins GiveawayWinner[]
 
   @@map("events")
+}
+
+model GiveawayWinner {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  playerId  Int
+  createdAt DateTime @default(now())
+
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@map("giveaway_winners")
 }
 
 model Setting {

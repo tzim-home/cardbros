@@ -4,6 +4,7 @@ import React from 'react';
 import { Trash2 } from 'lucide-react';
 import { unregisterPlayerFromEvent } from '@/lib/actions';
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 interface EventUnregisterClientProps {
     playerId: number;
@@ -12,14 +13,19 @@ interface EventUnregisterClientProps {
 }
 
 export default function EventUnregisterClient({ playerId, eventId, playerName }: EventUnregisterClientProps) {
+    const router = useRouter();
+
     const handleUnregister = async () => {
         if (!confirm(`Είστε σίγουροι ότι θέλετε να διαγράψετε την εγγραφή του παίκτη ${playerName}; Οι πόντοι συμμετοχής θα αφαιρεθούν.`)) {
             return;
         }
 
         try {
-            await unregisterPlayerFromEvent(playerId, eventId);
-            toast.success('Η εγγραφή διαγράφηκε επιτυχώς!');
+            const res = await unregisterPlayerFromEvent(playerId, eventId);
+            if (res.success) {
+                toast.success('Η εγγραφή διαγράφηκε επιτυχώς!');
+                router.refresh();
+            }
         } catch (err: any) {
             toast.error(err.message || 'Σφάλμα κατά τη διαγραφή της εγγραφής');
         }

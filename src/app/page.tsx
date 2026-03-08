@@ -7,7 +7,8 @@ import {
   Trophy,
   History,
   Settings as SettingsIcon,
-  LayoutDashboard
+  LayoutDashboard,
+  Gift
 } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
@@ -40,7 +41,7 @@ export default async function Dashboard() {
   });
 
   const stats = [
-    { label: 'Σύνολο Παικτών', value: totalPlayers.toString(), icon: Users, color: 'text-blue-600', bg: 'bg-blue-100' },
+    { label: 'Σύνολο Παικτών', value: totalPlayers.toString(), icon: Users, color: 'text-slate-600', bg: 'bg-slate-100' },
     { label: 'Συνολικοί Πόντοι', value: (totalPoints._sum.totalPoints || 0).toString(), icon: Star, color: 'text-amber-600', bg: 'bg-amber-100' },
     { label: 'Check-ins Σήμερα', value: checkinsToday.toString(), icon: CalendarCheck, color: 'text-emerald-600', bg: 'bg-emerald-100' },
   ];
@@ -49,7 +50,7 @@ export default async function Dashboard() {
     { label: 'Νέος Παίκτης', icon: UserPlus, color: 'blue', href: '/players' },
     { label: 'Τουρνουά', icon: Trophy, color: 'emerald', href: '/events' },
     { label: 'Ιστορικό Συναλλαγών', icon: History, color: 'slate', href: '/transactions' },
-    { label: 'Ρυθμίσεις Συστήματος', icon: SettingsIcon, color: 'slate', href: '/settings' },
+    { label: 'Ιστορικό Κληρώσεων', icon: Gift, color: 'amber', href: '/giveaway/history' },
   ];
 
   const activeEvent = await prisma.event.findFirst({
@@ -73,9 +74,9 @@ export default async function Dashboard() {
           {activeEvent && (
             <Link
               href={`/events/${activeEvent.id}`}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-lg shadow-blue-200 transition-all hover:scale-105 active:scale-95"
+              className="bg-slate-900 hover:bg-black text-white px-6 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-lg shadow-slate-200 transition-all hover:scale-105 active:scale-95"
             >
-              <Trophy className="w-6 h-6" />
+              <Trophy className="w-6 h-6 text-amber-500" />
               <span>Fast Check-in: {activeEvent.name}</span>
             </Link>
           )}
@@ -109,10 +110,10 @@ export default async function Dashboard() {
                     <Link
                       key={action.label}
                       href={action.href}
-                      className="flex flex-col items-center justify-center gap-3 p-8 rounded-xl border-2 border-slate-100 hover:border-blue-500 hover:bg-blue-50 transition-all group"
+                      className="flex flex-col items-center justify-center gap-3 p-8 rounded-xl border-2 border-slate-100 hover:border-slate-900 hover:bg-slate-50 transition-all group"
                     >
-                      <action.icon className="w-10 h-10 text-slate-400 group-hover:text-blue-600" />
-                      <span className="font-semibold text-slate-700 group-hover:text-blue-700">{action.label}</span>
+                      <action.icon className="w-10 h-10 text-slate-400 group-hover:text-slate-900" />
+                      <span className="font-semibold text-slate-700 group-hover:text-slate-900">{action.label}</span>
                     </Link>
                   ))}
                 </div>

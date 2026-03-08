@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { prisma } from '@/lib/prisma';
 import { UserPlus, Search, Edit2, Trash2, ChevronRight, Award, History, X, DollarSign, Download, Upload } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -168,9 +167,9 @@ export default function PlayersPage() {
                         </label>
                         <button
                             onClick={() => { setEditingPlayer(null); setShowModal(true); }}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-200"
+                            className="bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-slate-200"
                         >
-                            <UserPlus className="w-5 h-5" />
+                            <UserPlus className="w-5 h-5 text-slate-400" />
                             Προσθήκη Παίκτη
                         </button>
                     </div>
@@ -184,7 +183,7 @@ export default function PlayersPage() {
                                 <input
                                     type="text"
                                     placeholder="Αναζήτηση παίκτη (Όνομα ή ID)..."
-                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-white"
+                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 outline-none transition-all bg-white"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
@@ -218,9 +217,9 @@ export default function PlayersPage() {
                             </button>
                             <button
                                 onClick={() => { setEditingPlayer(null); setShowModal(true); }}
-                                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-200"
+                                className="bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-slate-200"
                             >
-                                <UserPlus className="w-5 h-5" />
+                                <UserPlus className="w-5 h-5 text-slate-400" />
                                 Προσθήκη Παίκτη
                             </button>
                         </div>
@@ -258,7 +257,7 @@ export default function PlayersPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="font-bold text-slate-900">{player.totalPoints} pts</div>
-                                            <div className="text-sm text-blue-600">{(player.totalCredits || 0).toFixed(2)} Credits</div>
+                                            <div className="text-sm text-slate-500">{(player.totalCredits || 0).toFixed(2)} Credits</div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex justify-center gap-1">
@@ -282,7 +281,7 @@ export default function PlayersPage() {
                                                 </button>
                                                 <button
                                                     onClick={() => handleEdit(player)}
-                                                    title="Επεξεργασία" className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                                                    title="Επεξεργασία" className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all"
                                                 >
                                                     <Edit2 className="w-5 h-5" />
                                                 </button>
@@ -320,7 +319,7 @@ export default function PlayersPage() {
                                             name="firstName"
                                             required
                                             defaultValue={editingPlayer?.firstName || ''}
-                                            className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none border transition-all"
+                                            className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none border transition-all"
                                         />
                                     </div>
                                     <div>
@@ -329,7 +328,7 @@ export default function PlayersPage() {
                                             name="lastName"
                                             required
                                             defaultValue={editingPlayer?.lastName || ''}
-                                            className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none border transition-all"
+                                            className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none border transition-all"
                                         />
                                     </div>
                                 </div>
@@ -339,7 +338,7 @@ export default function PlayersPage() {
                                         name="pokemonId"
                                         required
                                         defaultValue={editingPlayer?.pokemonId || ''}
-                                        className="border-slate-200 block w-full px-4 py-2.5 rounded-lg font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none border transition-all"
+                                        className="border-slate-200 block w-full px-4 py-2.5 rounded-lg font-mono focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none border transition-all"
                                         placeholder="π.χ. 1234567"
                                     />
                                 </div>
@@ -364,7 +363,7 @@ export default function PlayersPage() {
                                                     if (select) select.value = category;
                                                 }
                                             }}
-                                            className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none border transition-all"
+                                            className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none border transition-all"
                                         />
                                     </div>
                                     <div>
@@ -398,7 +397,7 @@ export default function PlayersPage() {
                                                 }
                                             }
                                         }}
-                                        className="flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all shadow-lg"
+                                        className="flex-1 px-6 py-3 bg-slate-900 text-white font-semibold rounded-xl hover:bg-black transition-all shadow-lg"
                                     >
                                         {editingPlayer ? 'Ενημέρωση' : 'Αποθήκευση'}
                                     </button>

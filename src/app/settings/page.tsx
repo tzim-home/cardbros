@@ -16,7 +16,7 @@ export default async function SettingsPage() {
                 <header className="mb-12">
                     <div className="flex items-center gap-4 mb-3">
                         <div className="p-3 bg-white rounded-2xl shadow-sm border border-slate-100">
-                            <SettingsIcon className="w-8 h-8 text-blue-600" />
+                            <SettingsIcon className="w-8 h-8 text-slate-800" />
                         </div>
                         <h1 className="text-3xl font-bold text-slate-900">Ρυθμίσεις Συστήματος</h1>
                     </div>
@@ -40,8 +40,8 @@ export default async function SettingsPage() {
                         </div>
                     ))}
 
-                    <div className="p-6 bg-blue-50 border border-blue-100 rounded-2xl flex gap-4 text-blue-800">
-                        <Info className="w-6 h-6 shrink-0" />
+                    <div className="p-6 bg-slate-100 border border-slate-200 rounded-2xl flex gap-4 text-slate-800">
+                        <Info className="w-6 h-6 shrink-0 text-slate-500" />
                         <p className="text-sm italic">
                             Οι αλλαγές στις ρυθμίσεις επηρεάζουν άμεσα τους υπολογισμούς για τα νέα check-ins.
                         </p>

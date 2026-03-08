@@ -47,9 +47,9 @@ export default function EventsPage() {
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-md"
+                        className="flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-black transition-colors shadow-md"
                     >
-                        <Plus className="w-5 h-5" />
+                        <Plus className="w-5 h-5 text-slate-400" />
                         Νέο Τουρνουά
                     </button>
                 </div>
@@ -60,7 +60,7 @@ export default function EventsPage() {
                     ) : events.length === 0 ? (
                         <div className="col-span-full py-12 text-center text-slate-400 italic">Δεν υπάρχουν τουρνουά.</div>
                     ) : events.map(event => (
-                        <div key={event.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col hover:border-blue-400 hover:shadow-md transition-all group">
+                        <div key={event.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col hover:border-slate-400 hover:shadow-md transition-all group">
                             <Link href={`/events/${event.id}`} className="flex-grow block cursor-pointer">
                                 <div>
                                     <div className="flex items-start justify-between mb-4">
@@ -71,7 +71,7 @@ export default function EventsPage() {
                                             {event.isActive ? 'Ενεργό' : 'Ανενεργό'}
                                         </span>
                                     </div>
-                                    <h3 className="text-xl font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors">{event.name}</h3>
+                                    <h3 className="text-xl font-bold text-slate-900 mb-1 group-hover:text-slate-700 transition-colors">{event.name}</h3>
                                     <p className="text-slate-500 text-sm mb-4 flex items-center gap-1">
                                         <Calendar className="w-4 h-4" />
                                         {new Date(event.date).toLocaleDateString('el-GR')}
@@ -106,19 +106,19 @@ export default function EventsPage() {
                             <form onSubmit={handleCreateEvent} className="p-8 space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1">Όνομα Τουρνουά</label>
-                                    <input name="name" required className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none border transition-all" placeholder="π.χ. Saturday Standard" />
+                                    <input name="name" required className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-slate-900 outline-none border transition-all" placeholder="π.χ. Saturday Standard" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1">Περιγραφή (Προαιρετικό)</label>
-                                    <textarea name="description" className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none border transition-all h-24 resize-none" />
+                                    <textarea name="description" className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-slate-900 outline-none border transition-all h-24 resize-none" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1">Ημερομηνία</label>
-                                    <input name="date" type="date" className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none border transition-all" defaultValue={new Date().toISOString().split('T')[0]} />
+                                    <input name="date" type="date" className="border-slate-200 block w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-slate-900 outline-none border transition-all" defaultValue={new Date().toISOString().split('T')[0]} />
                                 </div>
                                 <div className="pt-4 flex gap-3">
                                     <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-6 py-3 border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-all">Άκυρο</button>
-                                    <button type="submit" className="flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all shadow-lg">Δημιουργία</button>
+                                    <button type="submit" className="flex-1 px-6 py-3 bg-slate-900 text-white font-semibold rounded-xl hover:bg-black transition-all shadow-lg">Δημιουργία</button>
                                 </div>
                             </form>
                         </div>

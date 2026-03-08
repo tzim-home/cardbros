@@ -28,13 +28,23 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
 
     const registeredPlayers = event.transactions.map(t => t.player);
 
+    // Serialization Fix: Create TRULY plain objects
+    const serializablePlayers = registeredPlayers.map(p => ({
+        id: p.id,
+        firstName: p.firstName,
+        lastName: p.lastName,
+        pokemonId: p.pokemonId,
+        ageCategory: p.ageCategory,
+        totalPoints: p.totalPoints,
+        totalCredits: Number(p.totalCredits || 0),
+        birthDate: p.birthDate ? p.birthDate.toISOString() : null,
+    }));
+
     return (
         <div className="min-h-screen bg-slate-50">
-
-
             <main className="max-w-4xl mx-auto px-4 py-8">
                 <div className="mb-8">
-                    <Link href="/events" className="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-4 font-medium">
+                    <Link href="/events" className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors mb-4 font-medium">
                         <ChevronLeft className="w-5 h-5" />
                         Πίσω στα Τουρνουά
                     </Link>
@@ -48,7 +58,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                             </div>
                             <div className="flex items-center gap-4 text-slate-600">
                                 <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> {new Date(event.date).toLocaleDateString('el-GR')}</span>
-                                <span className="flex items-center gap-1.5"><Users className="w-4 h-4" /> {registeredPlayers.length} Συμμετοχές</span>
+                                <span className="flex items-center gap-1.5"><Users className="w-4 h-4" /> {serializablePlayers.length} Συμμετοχές</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
@@ -66,18 +76,18 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                     <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
                         <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center justify-between gap-2 w-full">
                             <div className="flex items-center gap-2">
-                                <Users className="w-5 h-5 text-blue-600" />
+                                <Users className="w-5 h-5 text-slate-400" />
                                 Συμμετέχοντες
                             </div>
-                            <EventExportClient eventName={event.name} players={registeredPlayers} />
+                            <EventExportClient eventName={event.name} players={serializablePlayers} />
                         </h2>
-                        {registeredPlayers.length === 0 ? (
+                        {serializablePlayers.length === 0 ? (
                             <div className="text-center py-12 text-slate-400 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
                                 Δεν υπάρχουν εγγραφές ακόμα.
                             </div>
                         ) : (
                             <ul className="divide-y divide-slate-100">
-                                {registeredPlayers.map((player, idx) => (
+                                {serializablePlayers.map((player, idx) => (
                                     <li key={idx} className="py-4 flex items-center justify-between hover:bg-slate-50 px-4 -mx-4 rounded-xl transition-colors">
                                         <div className="flex items-center gap-4">
                                             <span className="text-xl font-bold text-slate-300 min-w-[1.5rem] text-right">{idx + 1}.</span>

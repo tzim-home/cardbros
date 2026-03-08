@@ -2,15 +2,21 @@
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { deleteEvent } from '@/lib/actions';
+import { toast } from 'react-hot-toast';
 
 export default function EventDeleteClient({ eventId, eventName }: { eventId: number, eventName: string }) {
     const router = useRouter();
 
     const handleDelete = async () => {
         if (confirm(`Είστε απόλυτα σίγουροι ότι θέλετε να διαγράψετε το τουρνουά "${eventName}"; Όλες οι εγγραφές σε αυτό θα διαγραφούν οριστικά.`)) {
-            await deleteEvent(eventId);
-            router.push('/events');
-            router.refresh();
+            try {
+                await deleteEvent(eventId);
+                toast.success('Το τουρνουά διαγράφηκε επιτυχώς!');
+                router.push('/events');
+                router.refresh();
+            } catch (err: any) {
+                toast.error(err.message || 'Σφάλμα κατά τη διαγραφή του τουρνουά');
+            }
         }
     };
 

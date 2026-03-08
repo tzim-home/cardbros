@@ -247,38 +247,76 @@ export async function registerPlayerToEvent(playerId: number, eventId: number) {
 }
 
 export async function unregisterPlayerFromEvent(playerId: number, eventId: number) {
-    // Βρίσκουμε τη συναλλαγή checkin
-    const checkinTransaction = await prisma.transaction.findFirst({
-        where: {
-            playerId,
-            eventId,
-            type: 'checkin'
+    console.log(`Unregistering player ${playerId} from event ${eventId}`);
+    try {
+        // Βρίσκουμε τη συναλλαγή checkin
+        const checkinTransaction = await (prisma.transaction as any).findFirst({
+            where: {
+                playerId,
+                eventId,
+                type: 'checkin'
+            }
+        });
+
+        if (!checkinTransaction) {
+            console.error('No checkin transaction found');
+            throw new Error('Δεν βρέθηκε εγγραφή για αυτόν τον παίκτη.');
         }
-    });
 
-    if (!checkinTransaction) {
-        throw new Error('Δεν βρέθηκε εγγραφή για αυτόν τον παίκτη.');
+        const pointsToRemove = Number(checkinTransaction.amount);
+        console.log(`Removing ${pointsToRemove} points from player ${playerId}`);
+
+        await prisma.$transaction([
+            // Αφαίρεση πόντων από τον παίκτη
+            (prisma.player as any).update({
+                where: { id: playerId },
+                data: {
+                    totalPoints: { decrement: pointsToRemove },
+                },
+            }),
+            // Διαγραφή της συναλλαγής
+            (prisma.transaction as any).delete({
+                where: { id: checkinTransaction.id },
+            }),
+        ]);
+
+        console.log('Unregister successful');
+        revalidatePath(`/events/${eventId}`);
+        revalidatePath('/events');
+        revalidatePath('/players');
+        revalidatePath('/');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Unregister error:', error);
+        throw new Error(error.message || 'Σφάλμα κατά τη διαγραφή της εγγραφής');
     }
-
-    const pointsToRemove = Number(checkinTransaction.amount);
-
-    await prisma.$transaction([
-        // Αφαίρεση πόντων από τον παίκτη
-        prisma.player.update({
-            where: { id: playerId },
-            data: {
-                totalPoints: { decrement: pointsToRemove },
-            },
-        }),
-        // Διαγραφή της συναλλαγής
-        prisma.transaction.delete({
-            where: { id: checkinTransaction.id },
-        }),
-    ]);
-
-    revalidatePath(`/events/${eventId}`);
-    revalidatePath('/events');
-    revalidatePath('/players');
-    revalidatePath('/');
 }
+
+export async function saveGiveawayWinner(eventId: number, playerId: number) {
+    try {
+        await prisma.giveawayWinner.create({
+            data: {
+                eventId,
+                playerId
+            }
+        });
+        revalidatePath('/giveaway');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Save Giveaway Winner error:', error);
+        return { error: 'Σφάλμα κατά την αποθήκευση του νικητή' };
+    }
+}
+
+export async function clearGiveawayHistory() {
+    try {
+        await prisma.giveawayWinner.deleteMany({});
+        revalidatePath('/giveaway');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Clear Giveaway History error:', error);
+        return { error: 'Σφάλμα κατά την εκκαθάριση του ιστορικού' };
+    }
+}
+
 

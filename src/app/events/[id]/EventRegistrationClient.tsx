@@ -48,11 +48,11 @@ export default function EventRegistrationClient({ eventId, isActive }: { eventId
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-4">
                 <h3 className="font-bold text-slate-900 whitespace-nowrap">Νέα Εγγραφή</h3>
                 <div className="relative flex-grow w-full">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
                     <input
                         type="text"
                         placeholder="Όνομα ή Pokemon ID..."
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-slate-50 focus:bg-white text-sm"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-slate-900 outline-none transition-all bg-white text-slate-900 text-sm placeholder:text-slate-500"
                         value={search}
                         onChange={(e) => handleSearch(e.target.value)}
                     />
@@ -67,13 +67,13 @@ export default function EventRegistrationClient({ eventId, isActive }: { eventId
                         <button
                             key={player.id}
                             onClick={() => handleRegister(player.id)}
-                            className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50 hover:bg-blue-50 hover:border-blue-200 transition-all group text-left"
+                            className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 transition-all group text-left"
                         >
                             <div>
-                                <div className="font-bold text-slate-900 group-hover:text-blue-900 text-sm">{player.firstName} {player.lastName}</div>
+                                <div className="font-bold text-slate-900 group-hover:text-black text-sm">{player.firstName} {player.lastName}</div>
                                 <div className="text-xs text-slate-500 font-mono">{player.pokemonId}</div>
                             </div>
-                            <UserPlus className="w-4 h-4 text-blue-500" />
+                            <UserPlus className="w-4 h-4 text-slate-400 group-hover:text-slate-900" />
                         </button>
                     ))
                 ) : search.length >= 2 ? (

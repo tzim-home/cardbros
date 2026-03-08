@@ -12,17 +12,6 @@ export default async function TransactionsPage() {
 
     return (
         <div className="min-h-screen bg-slate-50">
-            <nav className="bg-blue-600 text-white shadow-lg">
-                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between text-xl font-bold">
-                    <Link href="/" className="flex items-center gap-2 tracking-tight">TCG Manager</Link>
-                    <div className="flex gap-4 text-sm font-medium">
-                        <Link href="/" className="hover:text-blue-200">Dashboard</Link>
-                        <Link href="/players" className="hover:text-blue-200">Παικτες</Link>
-                        <Link href="/transactions" className="underline">Ιστορικο</Link>
-                    </div>
-                </div>
-            </nav>
-
             <main className="max-w-7xl mx-auto px-4 py-8">
                 <header className="mb-8">
                     <div className="flex items-center gap-3 mb-2">
@@ -47,7 +36,7 @@ export default async function TransactionsPage() {
                                 <tr>
                                     <td colSpan={5} className="px-6 py-12 text-center text-slate-400 italic">Δεν υπάρχουν συναλλαγές.</td>
                                 </tr>
-                            ) : transactions.map(tx => (
+                            ) : transactions.map((tx: any) => (
                                 <tr key={tx.id} className="hover:bg-slate-50 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center gap-2 text-slate-600 text-sm">
